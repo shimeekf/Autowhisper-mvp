@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Download, Mic, Square, Play, Save, Trash2, Wrench, MessageCircle, NotebookText, MapPin, Volume2, Settings, Plus, Upload } from "lucide-react";
+import { Download, Mic, Square, Trash2, Wrench, MessageCircle, NotebookText, MapPin, Volume2, Settings, Plus, Upload } from "lucide-react";
 
 // ------------------------------------------------------------
 // AutoWhisper — Single-file React MVP
@@ -481,9 +481,11 @@ function LogbookTab() {
 
   const removeEntry = (id) => setEntries(entries.filter((e) => e.id !== id));
 
-  const exportCSV = () => {
-    const csv = toCSV(entries.map(({ id, ...rest }) => rest));
-    downloadFile("autowhisper_logbook.csv", csv, "text/csv");
+ ;const exportCSV = () => {
+  const csv = toCSV(entries.map(({ id, ...rest }) => rest));
+  downloadFile("aw_logbook.csv", csv, "text/csv");
+};
+
   };
 
   return (
