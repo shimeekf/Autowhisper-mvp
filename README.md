@@ -481,9 +481,13 @@ function LogbookTab() {
   const removeEntry = (id) => setEntries(entries.filter((e) => e.id !== id));
 
  ;const exportCSV = () => {
-  const csv = toCSV(entries.map(({ id, ...rest }) => rest));
-  downloadFile("aw_logbook.csv", csv, "text/csv");
+const csv = toCSV(entries.map(({ id, ...rest }) => rest));
+downloadFile("aw_logbook.csv", csv, "text/csv"); -};
 };
+const exportCSV = () => {
+const csv = toCSV(entries.map(({ id, ...rest }) => rest));
+downloadFile("aw_logbook.csv", csv, "text/csv");
+}; 
 
   };
 
