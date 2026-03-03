@@ -244,17 +244,47 @@ function SettingsPanel({ open, onClose, profile, setProfile }) {
     </div>
   );
 }
-function computeOilReminder(profile) { if (!profile) return null;
+function computeOilReminder(profile) {
 
-// Safe guards for invalid/missing data let daysSince = null; try { if (profile.lastOilChangeDate) { const t = new Date(profile.lastOilChangeDate).getTime(); if (Number.isFinite(t)) { const delta = Date.now() - t; daysSince = Math.floor(delta / (1000 * 60 * 60 * 24)); } } } catch { daysSince = null; }
-
-let milesSince = null; try { const curr = Number(profile.currentMileage); const last = Number(profile.lastOilChangeMileage); if (Number.isFinite(curr) && Number.isFinite(last)) milesSince = curr - last; } catch { milesSince = null; }
-
-const dueByDays = Number.isFinite(daysSince) && daysSince >= 90; const dueByMiles = Number.isFinite(milesSince) && milesSince >= 5000;
-
-const parts = []; if (Number.isFinite(daysSince)) parts.push(${daysSince} days since last oil change); if (Number.isFinite(milesSince)) parts.push(${milesSince} miles since last oil change); const reason = parts.length > 0 ? parts.join(" · ") : "Set your last oil change to enable reminders";
-
-return { due: dueByDays || dueByMiles, reason }; }
+if (!profile) return null;
+const daysSince = profile.lastOilChangeDate ? Math.floor((Date.now() - new Date(profile.lastOilChange).getTime()) / (1000 * 60 * 60 * 24)) : null;
+const milesSince = profile.currentMileage && profile.lastOilChangeMileage ? Number(profile.currentMileage) - Number(profile.lastOilChangeMileage) : null;
+const dueByDays = daysSince != null && daysSince >= 90;
+const dueByMiles = milesSince != null && milesSince >= 5000;
+const reason = [
+daysSince != null ? ${daysSince} days since last oil change : null,
+milesSince != null ? ${milesSince} miles since last oil change : null,
+].filter(Boolean).join(" · ") || "Set your last oil change to enable reminders";
+return { due: Boolean(dueByDays || dueByMiles), reason }; -} +function computeOilReminder(profile) {
+if (!profile) return null;
+// Safe guards for invalid/missing data
+let daysSince = null;
+try {
+if (profile.lastOilChangeDate) {
+ const t = new Date(profile.lastOilChangeDate).getTime();
+ if (Number.isFinite(t)) {
+   const delta = Date.now() - t;
+   daysSince = Math.floor(delta / (1000 * 60 * 60 * 24));
+ }
+}
+} catch {
+daysSince = null;
+}
+let milesSince = null;
+try {
+const curr = Number(profile.currentMileage);
+const last = Number(profile.lastOilChangeMileage);
+if (Number.isFinite(curr) && Number.isFinite(last)) milesSince = curr - last;
+} catch {
+milesSince = null;
+}
+const dueByDays = Number.isFinite(daysSince) && daysSince >= 90;
+const dueByMiles = Number.isFinite(milesSince) && milesSince >= 5000;
+const parts = [];
+if (Number.isFinite(daysSince)) parts.push(${daysSince} days since last oil change);
+if (Number.isFinite(milesSince)) parts.push(${milesSince} miles since last oil change);
+const reason = parts.length > 0 ? parts.join(" · ") : "Set your last oil change to enable reminders";
+return { due: dueByDays || dueByMiles, reason }; +}
 
 
 function DiagnoseTab() {
