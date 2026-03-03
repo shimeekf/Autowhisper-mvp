@@ -243,8 +243,7 @@ function SettingsPanel({ open, onClose, profile, setProfile }) {
       </Card>
     </div>
   );
-}
-function computeOilReminder(profile) {
+}function computeOilReminder(profile) {
 
 if (!profile) return null;
 const daysSince = profile.lastOilChangeDate ? Math.floor((Date.now() - new Date(profile.lastOilChange).getTime()) / (1000 * 60 * 60 * 24)) : null;
