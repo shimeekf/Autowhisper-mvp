@@ -244,7 +244,7 @@ function SettingsPanel({ open, onClose, profile, setProfile }) {
     </div>
   );
 }
-function computeOilReminder(profile) {
+Update File: AutoWhisperApp.jsx @@ -function computeOilReminder(profile) {
 
 if (!profile) return null;
 const daysSince = profile.lastOilChangeDate ? Math.floor((Date.now() - new Date(profile.lastOilChange).getTime()) / (1000 * 60 * 60 * 24)) : null;
@@ -257,14 +257,13 @@ milesSince != null ? ${milesSince} miles since last oil change : null,
 ].filter(Boolean).join(" · ") || "Set your last oil change to enable reminders";
 return { due: Boolean(dueByDays || dueByMiles), reason }; -} +function computeOilReminder(profile) {
 if (!profile) return null;
-// Safe guards for invalid/missing data
+// Robust date/mileage handling
 let daysSince = null;
 try {
 if (profile.lastOilChangeDate) {
  const t = new Date(profile.lastOilChangeDate).getTime();
  if (Number.isFinite(t)) {
-   const delta = Date.now() - t;
-   daysSince = Math.floor(delta / (1000 * 60 * 60 * 24));
+   daysSince = Math.floor((Date.now() - t) / (1000 * 60 * 60 * 24));
  }
 }
 } catch {
@@ -285,7 +284,6 @@ if (Number.isFinite(daysSince)) parts.push(${daysSince} days since last oil chan
 if (Number.isFinite(milesSince)) parts.push(${milesSince} miles since last oil change);
 const reason = parts.length > 0 ? parts.join(" · ") : "Set your last oil change to enable reminders";
 return { due: dueByDays || dueByMiles, reason }; +}
-
 
 function DiagnoseTab() {
   const [recording, setRecording] = useState(false);
@@ -506,20 +504,20 @@ function LogbookTab() {
     const newEntries = [{ id: crypto.randomUUID(), ...form }, ...entries];
     setEntries(newEntries);
     setForm({ date: "", service: "", mileage: "", notes: "" });
-  };
+  };Update File: AutoWhisperApp.jsx @@
 
-  const removeEntry = (id) => setEntries(entries.filter((e) => e.id !== id));
-
- ;const exportCSV = () => {
+;const exportCSV = () => {
 const csv = toCSV(entries.map(({ id, ...rest }) => rest));
 downloadFile("aw_logbook.csv", csv, "text/csv"); -};
 };
 const exportCSV = () => {
 const csv = toCSV(entries.map(({ id, ...rest }) => rest));
 downloadFile("aw_logbook.csv", csv, "text/csv");
-}; 
+};
 
-  };
+  const removeEntry = (id) => setEntries(entries.filter((e) => e.id !== id));
+
+ 
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
@@ -528,7 +526,9 @@ downloadFile("aw_logbook.csv", csv, "text/csv");
           <CardTitle>Add Service Record</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div>
+          <div>Update File: AutoWhisperApp.jsx @@
+
+
             <label className="text-sm">Date</label>
             <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
           </div>
